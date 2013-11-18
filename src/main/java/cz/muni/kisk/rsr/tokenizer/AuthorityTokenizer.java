@@ -48,7 +48,7 @@ public class AuthorityTokenizer {
 		for (int i = 0; i < text.length(); ++i) {
 			char c = text.charAt(i);
 			
-			if ((c == ' ' || c == '\t' || c == '\n')) {
+			if (Character.isWhitespace(c)) {
 				if (word.length() == 0) {
 					continue;
 				} else {
@@ -61,7 +61,7 @@ public class AuthorityTokenizer {
 					word = new StringBuilder();
 					offset = -1;
 				}
-			} else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+			} else if (Character.isLowerCase(c) || Character.isUpperCase(c)) {
 				if (offset == -1) {
 					offset = i;
 					setTypeToToken(token, c);
@@ -111,9 +111,9 @@ public class AuthorityTokenizer {
 	}
 	
 	private static void setTypeToToken(StringToken token, char c) {
-		if (c >= 'a' && c <= 'z') {
+		if (Character.isLowerCase(c)) {
 			token.setType(StringTokenType.LowerCaseWord);
-		} else if (c >= 'A' && c <= 'Z') {
+		} else if (Character.isUpperCase(c)) {
 			token.setType(StringTokenType.UpperCaseWord);
 		} else if (c == '.') {
 			token.setType(StringTokenType.Dot);
