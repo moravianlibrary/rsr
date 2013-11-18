@@ -6,6 +6,13 @@
 <script>
 	var testJSON = [{ "words" : [ { "length" : 8, "empty" : false, "type" : "UpperCaseWord", "offset" : 0, "string" : "Skusobny" } ], "id" : 0 }]
 	
+	function removeClass(id) {
+		var word = $('#' + id)
+		word.removeAttr('style');
+		var a = word.next('a');
+		a.remove();
+	}
+	
 	function UnHighlight(){
 		document.getElementById("myDiv").innerHTML = text
 	}
@@ -15,12 +22,15 @@
 		var highlited = "";
 		var lastOffset = 0;
 		var lastLength = 0;
+		var wordId = 0;
 		for (var i=0; i < myJSON.length;i++){
 			for (var j = 0; j< myJSON[i].words.length; j++){
 			console.log(myJSON[i].words[0]);
-				highlited += text.substring(lastOffset+lastLength , myJSON[i].words[j].offset+1) +"<span style=\"background-color: #FFFF00\">" + text.substring(myJSON[i].words[j].offset+1, myJSON[i].words[j].offset+1 + myJSON[i].words[j].length) +"</span>";
+				highlited += text.substring(lastOffset+lastLength , myJSON[i].words[j].offset+1) +"<span id=" + "\"word" + wordId + "\"" + " style=\"background-color: #FFFF00\">" + text.substring(myJSON[i].words[j].offset+1, myJSON[i].words[j].offset+1 + myJSON[i].words[j].length) +"</span><a href=\"javascript:removeClass('word" + wordId +  "')\"><img src='cancel.png'></a>";
+				console.log(highlited);
 				lastOffset = myJSON[i].words[j].offset+1
-				lastLength = myJSON[i].words[j].length
+				lastLength = myJSON[i].words[j].length;
+				++wordId;
 			}
 		}
 		document.getElementById(id).innerHTML = highlited
