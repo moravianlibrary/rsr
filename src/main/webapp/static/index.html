@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
+<body>
+
+<div id="myDiv"  style="width:50%">
+Add search and sort abilities into build-in function list.
+Add Java parser into function list.
+Add auto-completion for absolute path feature.
+Fix scrolling text problem while using "Synaptics touchpad".
+Fix EOL type not correctly determined for UTF-16 files bug.
+Fix tab settings bug in Normal text.
+</div>
+<button onclick="Highlight(testJSON)">Highlight</button>
+<button onclick="UnHighlight()">UnHighlight</button>
+
+</body>
+<script>
+	var testJSON = [{ "words" : [ { "length" : 8, "empty" : false, "type" : "UpperCaseWord", "offset" : 0, "string" : "Skusobny" } ], "id" : 0 }]
+	
+	var text = document.getElementById("myDiv").innerHTML
+	
+	
+	function UnHighlight(){
+		document.getElementById("myDiv").innerHTML = text
+	}
+	
+	function Highlight(json){
+		var myJSON = json
+		var highlited =""
+		var lastOffset =0
+		var lastLength =0
+		for(var i=0; i < myJSON.length;i++){
+			for(var j = 0; j< myJSON[i].words.length; j++){
+			console.log(myJSON[i].words[0]);
+				highlited += text.substring(lastOffset+lastLength , myJSON[i].words[j].offset+1) +"<span style=\"background-color: #FFFF00\">" + text.substring(myJSON[i].words[j].offset+1, myJSON[i].words[j].offset+1 + myJSON[i].words[j].length) +"</span>
+				lastOffset = myJSON[i].words[j].offset+1
+				lastLength = myJSON[i].words[j].length
+			}
+		}
+		
+		//highlited = text.substring(1,myJSON.words[0].offset+1) +"<span style=\"background-color: #FFFF00\">"+text.substring(myJSON.words[0].offset+1, myJSON.words[0].offset+1 + myJSON.words[0].length) +"</span>"+text.substring(myJSON.words[0].offset+1 + myJSON.words[0].length)
+		document.getElementById("myDiv").innerHTML = highlited
+	}
+	
+		
+</script>
 </html>

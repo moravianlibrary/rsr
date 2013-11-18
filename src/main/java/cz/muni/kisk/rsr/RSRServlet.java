@@ -40,7 +40,6 @@ public class RSRServlet extends HttpServlet {
         }
         if (action.equals("parse")) {
             String text = request.getParameter("text");
-            
             List<AuthorityRecord> authorities =  AuthorityTokenizer.getAuthorityRecords(text);
             mapper.defaultPrettyPrintingWriter().writeValue(response.getOutputStream(), authorities);
         }
