@@ -94,7 +94,7 @@ public class AuthorityTokenizer {
 					setTypeToToken(token, c);
 				}
 				word.append(c);
-			} else if (c == '.' || c == ',') {
+			} else if (c == '.') {
 				if (word.length() == 0) {
 					word.append(c);
 					token.setString(word.toString());

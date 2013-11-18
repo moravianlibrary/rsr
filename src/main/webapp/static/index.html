@@ -25,14 +25,29 @@
 		var wordId = 0;
 		for (var i=0; i < myJSON.length;i++){
 			for (var j = 0; j< myJSON[i].words.length; j++){
-			console.log(myJSON[i].words[0]);
-				highlited += text.substring(lastOffset+lastLength , myJSON[i].words[j].offset+1) +"<span id=" + "\"word" + wordId + "\"" + " style=\"background-color: #FFFF00\">" + text.substring(myJSON[i].words[j].offset+1, myJSON[i].words[j].offset+1 + myJSON[i].words[j].length) +"</span><a href=\"javascript:removeClass('word" + wordId +  "')\"><img src='cancel.png'></a>";
+				var probability = myJSON[i].probability
+				var color
+				switch (probability){
+					case -1:
+						color="red";
+						break;
+					case 0:
+						color="yellow"
+						break;
+					default:
+						var g = Math.max(Math.floor((1 - myJSON[i].probability/10.0) * 255), 50);
+						color = "rgb(0," + g + ",0)"
+						break;
+					
+				}
+				highlited += text.substring(lastOffset+lastLength , myJSON[i].words[j].offset) +"<span id=" + "\"word" + wordId + "\"" + " style=\"background-color:" + color + "\">" + text.substring(myJSON[i].words[j].offset, myJSON[i].words[j].offset + myJSON[i].words[j].length) +"</span><a href=\"javascript:removeClass('word" + wordId +  "')\"><img src='cancel.png'></a>";
 				console.log(highlited);
-				lastOffset = myJSON[i].words[j].offset+1
+				lastOffset = myJSON[i].words[j].offset
 				lastLength = myJSON[i].words[j].length;
 				++wordId;
 			}
 		}
+		highlited += text.substring(lastOffset + lastLength)
 		document.getElementById(id).innerHTML = highlited
 	}
 	
