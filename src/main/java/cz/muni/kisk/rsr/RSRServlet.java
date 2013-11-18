@@ -11,18 +11,39 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class RSRServlet extends HttpServlet {
+    
+    private static class Error {
+        
+        private String error;
+        
+        public Error(String error) {
+            this.error = error;
+        }
 
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
+        }
+        
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.addHeader("Access-Control-Allow-Origin", "*");
         ObjectMapper mapper = new ObjectMapper();
-        /*
-        ExampleBean example = new ExampleBean();
-        example.setName("test");
-        example.setLength(10);
-        */
-        List<AuthorityRecord> authorities =  AuthorityTokenizer.getAuthorityRecords("Skusobny text. Jan Novak");
-        mapper.defaultPrettyPrintingWriter().writeValue(response.getOutputStream(), authorities);
-        //mapper.writeValue(response.getOutputStream(), authorities);
-        //response.getOutputStream().print("OK");
+        String action = request.getParameter("action");
+        if (action == null) {
+            mapper.defaultPrettyPrintingWriter().writeValue(response.getOutputStream(), new Error("missing action parameter"));
+        }
+        if (action.equals("parse")) {
+            String text = request.getParameter("text");
+            
+            List<AuthorityRecord> authorities =  AuthorityTokenizer.getAuthorityRecords(text);
+            mapper.defaultPrettyPrintingWriter().writeValue(response.getOutputStream(), authorities);
+        }
     }
+    
 }
