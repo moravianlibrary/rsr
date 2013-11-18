@@ -32,10 +32,6 @@ public class StringToken {
 		this.type = type;
 	}
 	
-	public boolean isEmpty() {
-		return string == null || string.length() == 0;
-	}
-	
 	@Override
 	public String toString() {
 		return "StringToken [string=" + string + ", offset=" + offset
