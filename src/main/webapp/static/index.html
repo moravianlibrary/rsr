@@ -41,11 +41,9 @@
 	$( document ).ready(function() {
 		$("#text_form").submit(function( event ) {
 			var text = $("#text").val();
-			$("#text_form").hide();
 			event.preventDefault();
-			//alert( "Handler for .submit() called: " + text );
-			var url = "http://localhost:8080/cz.muni.kisk.rsr/rsr?action=parse&text=" + encodeURIComponent(text);
-			jQuery.ajax({ url : url }).done(function(json) { Highlight("higlight", text, JSON.parse(json)); });
+			var url = "http://localhost:8080/cz.muni.kisk.rsr/rsr?action=parse";
+			jQuery.post(url, { "text": text} ).done(function(json) { Highlight("higlight", text, JSON.parse(json)); });
 		});
 	});
 </script>
@@ -53,15 +51,11 @@
 <body>
 
 <form id="text_form">
-  <textarea id="text"></textarea>
+  <textarea id="text" rows="8" cols="80"></textarea>
   <br />
   <input id="submit" type="submit"></input>
 </form>
 
 <div id="higlight" style="width:50%"></div>
-<!--
-<button onclick="Highlight(testJSON)">Highlight</button>
-<button onclick="UnHighlight()">UnHighlight</button>
--->
 </body>
 </html>
