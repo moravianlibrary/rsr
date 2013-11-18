@@ -7,12 +7,28 @@ public class AuthorityRecord {
 
 	private Long id;
 	private List<StringToken> words;
+	private int probability;
 	
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public int getProbability() {
+		return probability;
+	}
+	public void setProbability(int probability) {
+		this.probability = probability;
+	}
+	public void incProbability() {
+		++probability;
+	}
+	public void decProbability() {
+		--probability;
+	}
+	public void setWords(List<StringToken> words) {
+		this.words = words;
 	}
 	public List<StringToken> getWords() {
 		return words;

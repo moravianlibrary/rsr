@@ -10,12 +10,16 @@ public class AuthorityTokenizer {
 		
 		Long id = 0l;
 		AuthorityRecord authorityRecord = null;
+		boolean wasDot = true;
 		
 		List<StringToken> tokens = tokenize(text);
 		for (StringToken stringToken : tokens) {
 			if (authorityRecord == null && stringToken.getType() == StringTokenType.UpperCaseWord) {
 				authorityRecord = new AuthorityRecord();
 				authorityRecord.addWord(stringToken);
+				if (wasDot) {
+					authorityRecord.decProbability();
+				}
 			} else if (
 				authorityRecord != null &&
 					(
@@ -30,13 +34,36 @@ public class AuthorityTokenizer {
 				result.add(authorityRecord);
 				authorityRecord = null;
 			}
+			if (stringToken.getType() == StringTokenType.Dot) {
+				wasDot = true;
+			} else {
+				wasDot = false;
+			}
 		}
 		if (authorityRecord != null) {
 			authorityRecord.setId(id++);
 			result.add(authorityRecord);
 		}
+		assignProbability(result);
 		
 		return result;
+	}
+	
+	private static void assignProbability(List<AuthorityRecord> records) {
+		for (AuthorityRecord authorityRecord : records) {
+			int numWords = -1;
+			for (StringToken word : authorityRecord.getWords()) {
+				if (word.getType() == StringTokenType.UpperCaseWord || word.getType() == StringTokenType.Dot) {
+					++numWords;
+				} else {
+					authorityRecord.setProbability(authorityRecord.getProbability() + numWords);
+					numWords = -1;
+				}
+			}
+			if (numWords > 0) {
+				authorityRecord.setProbability(authorityRecord.getProbability() + numWords);
+			}
+		}
 	}
 	
 	private static List<StringToken> tokenize(String text) {
