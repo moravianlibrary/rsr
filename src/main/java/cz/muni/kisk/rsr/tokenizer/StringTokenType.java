@@ -1,4 +1,4 @@
-package cz.muni.kisk.rsr;
+package cz.muni.kisk.rsr.tokenizer;
 
 public enum StringTokenType {
 
