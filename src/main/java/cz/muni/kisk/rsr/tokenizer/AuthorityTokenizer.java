@@ -83,7 +83,7 @@ public class AuthorityTokenizer {
 					// save before word
 					token.setString(word.toString());
 					token.setOffset(offset);
-					token.setLength(offset - i);
+					token.setLength(i - offset);
 					result.add(token);
 					// create new token
 					token = new StringToken();
