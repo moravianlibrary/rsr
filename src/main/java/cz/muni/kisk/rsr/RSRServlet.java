@@ -45,7 +45,8 @@ public class RSRServlet extends HttpServlet {
         }
         if (action.equals("parse")) {
             String text = request.getParameter("text");
-            List<AuthorityRecord> authorities =  AuthorityTokenizer.getAuthorityRecords(text);
+            AuthorityTokenizer tokenizer = new AuthorityTokenizer();
+            List<AuthorityRecord> authorities =  tokenizer.getAuthorityRecords(text);
             mapper.defaultPrettyPrintingWriter().writeValue(response.getOutputStream(), authorities);
         }
     }

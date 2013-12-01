@@ -39,9 +39,10 @@ public class AuthorityRecord {
 		}
 		words.add(word);
 	}
-	
 	@Override
 	public String toString() {
-		return "AuthorityRecord [id=" + id + ", words=" + words + "]";
+		return "AuthorityRecord [id=" + id + ", words=" + words
+				+ ", probability=" + probability + "]";
 	}
+	
 }

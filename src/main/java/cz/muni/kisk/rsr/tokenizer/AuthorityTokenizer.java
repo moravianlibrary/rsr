@@ -2,10 +2,18 @@ package cz.muni.kisk.rsr.tokenizer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AuthorityTokenizer {
+	
+	private Pattern pattern;
+	
+	public AuthorityTokenizer() {
+		pattern = Pattern.compile("([a-žA-Ž]+)|\\.|,");
+	}
 
-	public static List<AuthorityRecord> getAuthorityRecords(String text) {
+	public List<AuthorityRecord> getAuthorityRecords(String text) {
 		List<AuthorityRecord> result = new LinkedList<AuthorityRecord>();
 		
 		Long id = 0l;
@@ -66,85 +74,33 @@ public class AuthorityTokenizer {
 		}
 	}
 	
-	private static List<StringToken> tokenize(String text) {
+	private List<StringToken> tokenize(String text) {
 		List<StringToken> result = new LinkedList<StringToken>();
-		StringToken token = new StringToken();
-		StringBuilder word = new StringBuilder();
-		int offset = -1;
+		Matcher matcher = pattern.matcher(text);
 		
-		for (int i = 0; i < text.length(); ++i) {
-			char c = text.charAt(i);
-			
-			if (Character.isWhitespace(c)) {
-				if (word.length() == 0) {
-					continue;
-				} else {
-					token.setString(word.toString());
-					token.setOffset(offset);
-					token.setLength(i - offset);
-					result.add(token);
-					// reset
-					token = new StringToken();
-					word = new StringBuilder();
-					offset = -1;
-				}
-			} else if (Character.isLowerCase(c) || Character.isUpperCase(c)) {
-				if (offset == -1) {
-					offset = i;
-					setTypeToToken(token, c);
-				}
-				word.append(c);
-			} else if (c == '.') {
-				if (word.length() == 0) {
-					word.append(c);
-					token.setString(word.toString());
-					token.setOffset(i);
-					token.setLength(1);
-					setTypeToToken(token, c);
-					result.add(token);
-					// reset
-					token = new StringToken();
-					word = new StringBuilder();
-					offset = -1;
-				} else {
-					// save before word
-					token.setString(word.toString());
-					token.setOffset(offset);
-					token.setLength(i - offset);
-					result.add(token);
-					// create new token
-					token = new StringToken();
-					word = new StringBuilder();
-					word.append(c);
-					token.setString(word.toString());
-					token.setOffset(offset);
-					token.setLength(1);
-					setTypeToToken(token, c);
-					result.add(token);
-					// reset
-					token = new StringToken();
-					word = new StringBuilder();
-					offset = -1;
-				}
-			}
-		}
-		if (word.length() != 0) {
-			token.setString(word.toString());
-			token.setOffset(offset);
-			token.setLength(text.length() - offset);
+		int start = 0;
+		
+		while(matcher.find(start)) {
+			StringToken token = new StringToken();
+			token.setString(matcher.group());
+			token.setOffset(matcher.start());
+			token.setLength(matcher.end() - matcher.start());
+			setTypeToToken(token);
 			result.add(token);
+			start = matcher.end();
 		}
 		return result;
 	}
 	
-	private static void setTypeToToken(StringToken token, char c) {
-		if (Character.isLowerCase(c)) {
+	private static void setTypeToToken(StringToken token) {
+		String str = token.getString();
+		if (Character.isLowerCase(str.charAt(0))) {
 			token.setType(StringTokenType.LowerCaseWord);
-		} else if (Character.isUpperCase(c)) {
+		} else if (Character.isUpperCase(str.charAt(0))) {
 			token.setType(StringTokenType.UpperCaseWord);
-		} else if (c == '.') {
+		} else if (".".equals(str)) {
 			token.setType(StringTokenType.Dot);
-		} else if (c == ',') {
+		} else if (",".equals(str)) {
 			token.setType(StringTokenType.Comma);
 		}
 	}
