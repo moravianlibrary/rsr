@@ -52,9 +52,21 @@ public class AuthorityTokenizer {
 			authorityRecord.setId(id++);
 			result.add(authorityRecord);
 		}
+		removeEndCommas(result);
 		assignProbability(result);
 		
 		return result;
+	}
+	
+	private static void removeEndCommas(List<AuthorityRecord> records) {
+		for (AuthorityRecord record : records) {
+			List<StringToken> recordWords = record.getWords();
+			StringToken lastWord = recordWords.get(recordWords.size() - 1);
+			
+			if (lastWord.getType() == StringTokenType.Comma) {
+				recordWords.remove(lastWord);
+			}
+		}
 	}
 	
 	private static void assignProbability(List<AuthorityRecord> records) {
